@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en-US"> 
+  <head> 
+  <title>Connect 4 - Games - GamesmanWeb</title> 
+  <!--[if lte IE 7]>
+  <style type="text/css">
+    html > body > .header > h1 { display: inline }
+    #moves { position: relative; left: 3em }
+  </style>
+  <![endif]-->
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="game/styles/gcweb.css">
+  <link rel="stylesheet" href="game/styles/connect4.css">
+  <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../favicon.ico">
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="game/js/gc-game.js"></script>
+  <script type="text/javascript" src="game/js/connect4.js"></script>
+  <script type="text/javascript" src="game/js/vvh.js"></script>
+  <script type="text/javascript">
+
+    var game = null;
+  
+    $(document).ready(function() {
+      $("#moves").css("min-height", Math.max($("#moves").height(), $("#main").height()));
+      $("#prediction").slideDown(250);
+
+      var config = {
+          width: 7,
+          height: 6,
+          options: { pieces: 4}
+        };
+      game = new ConnectFour(config);
+      $("#game").empty().append(game.board);
+      game.start();
+    });
+
+    $(function() {
+      var form = $("#connect4-play");
+      form.find("button").click(function() {
+        game.undoMove();
+      });
+
+    });
+    
+  </script>
+  </head> 
+  <body> 
+
+  <div id="container"> 
+    <!-- game commands --> 
+    <div class="nav">
+    <ul>
+      <li><a href="javascript:location.reload();">Reset Game</a></li>
+    </ul>
+        
+    </div> 
+    <div id="main">
+      <div id="game">
+
+      </div>
+    </div> 
+    <!-- sidebar --> 
+    <div id="moves" class="aside">
+    <div id="moves-inside">
+     <div id="move-value-key">
+      <h1>Move-value Key</h1>
+      <table>
+      <tr>
+        <td><img src="images/win.png" alt="Green"></td>
+        <td><img src="images/tie.png" alt="Yellow"></td>
+        <td><img src="images/lose.png" alt="Red"></td>
+      </tr>
+      <tr>
+        <td>winning move</td><td>cause a tie</td><td>losing move</td>
+      </tr>
+      </table>
+    </div>
+    <div id="prediction">
+      <h1>Prediction</h1>
+      <span>Game not started</span>
+    </div>
+    <div id="connect4-play"><button type="button">Undo</button></div>
+
+</div>
+	
+    </div> 
+  </div>
+  </body> 
+</html> 
