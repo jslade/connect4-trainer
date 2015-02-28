@@ -32,12 +32,25 @@
       game = new ConnectFour(config);
       $("#game").empty().append(game.board);
       game.start();
-    });
 
-    $(function() {
-      var form = $("#connect4-play");
-      form.find("button").click(function() {
-        game.undoMove();
+      $("#spinner").bind("ajaxSend", function() {
+        $(this).show(0).delay(100);
+        // undoing moves while the latest move values are being
+        // fetched breaks everything and must be avoided
+        game.undoLocked = true;
+      }).bind("ajaxStop", function() {
+          game.undoLocked = false;
+          $(this).hide()
+      }).bind("ajaxError", function() {
+          game.undoLocked = false;
+          $(this).hide();
+      });
+      });
+
+      $(function() {
+        var form = $("#connect4-play");
+        form.find("button").click(function() {
+          game.undoMove();
       });
 
     });
@@ -45,6 +58,10 @@
   </script>
   </head> 
   <body> 
+
+  <div id="spinner" class="spinner" style="display:none;">
+    <img id="img-spinner" src="images/loading.gif" alt="Fetching move values..."/>
+  </div>
 
   <div id="container"> 
     <!-- game commands --> 

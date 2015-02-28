@@ -34,6 +34,17 @@ body > .header h1 {
 .tie-move { background-color: #ff0 }
 .lose-move { background-color: #8a0000 }
 
+.spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-left: -80px;
+    margin-top: -80px; 
+    text-align:center;
+    vertical-align: middle;
+    z-index:1234;
+}
+
 #options { margin-left: 0.5em; list-style: none; font-size: 0.9em }
 
 #main { width: 100%; margin-left: -10em }

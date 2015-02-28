@@ -62,6 +62,8 @@ ConnectFour.prototype.constructor = function(config) {
   this.board = $(table).attr("id", this.board.attr("id"));
   this.addEventListener("executingmove", this.handleExecutingMove);
   this.addEventListener("nextvaluesreceived", this.handleNextValuesReceived);
+  // we must be careful about when we allow moves to be undone
+  this.undoLocked = false;
 
   var pixelWidth = config.maxPixelWidth || ConnectFour.DEFAULT_SIZE;
   if (this.height + 1 > this.width) {
@@ -100,6 +102,13 @@ ConnectFour.prototype.createPiece = function(team) {
 };
 
 ConnectFour.prototype.undoMove = function() {  
+
+  if (this.undoLocked) {
+    // the lock protects game state from corruption if the user
+    // undoes a move while move values are being fetched over the wire
+    return;  
+  }
+
   // moveHistory length is 1 greater than number of moves played, oddly
   if (this.moveHistory.length < 2) {
     GCWeb.alert("No more moves to undo");
