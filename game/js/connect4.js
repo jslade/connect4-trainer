@@ -70,6 +70,7 @@ ConnectFour.prototype.constructor = function(config) {
     pixelWidth *= this.width / (this.height + 1.0);
   }
   this.resize(pixelWidth);
+  this.moveNumber = 1;
 };
 
 ConnectFour.prototype.getDefaultBoardString = function() {
@@ -139,6 +140,8 @@ ConnectFour.prototype.undoMove = function() {
     this.showMoveValues(this.nextMoves);
     this.moveHistory.pop();
     this.prediction.updatePrediction();
+    this.moveNumber--;
+    this.updateMoveCounter();
   }  
 };
 
@@ -158,6 +161,10 @@ ConnectFour.prototype.findFreeRow = function(column, board) {
   return row;
 };
 
+ConnectFour.prototype.updateMoveCounter = function() {
+  $("#move-counter > span").html(this.moveNumber);
+}
+
 ConnectFour.prototype.handleExecutingMove = function(moveValue) {
   if (this.currentPiece) {
     // Remove the mouse tracker from the current piece.
@@ -173,6 +180,8 @@ ConnectFour.prototype.handleExecutingMove = function(moveValue) {
     var dropTime = (row + 1) * ConnectFourPiece.MILLIS_PER_ROW;
     this.currentPiece.moveToRow(row, dropTime);
     this.currentPiece = null;
+    this.moveNumber++;
+    this.updateMoveCounter();
   }
   return true;
 };

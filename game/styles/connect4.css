@@ -57,3 +57,4 @@
 #connect4-options table td, #connect4-options table th { padding: 0 0.5em }
 
 #connect4-play { text-align: center; margin-top: 1em }
+#move-counter { text-align: center }
