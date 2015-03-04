@@ -57,7 +57,8 @@ body > .header h1 {
 
 #moves {
   width: 10em; padding-left: 1em; padding-right: 1em; float: right; margin-right: -15em;
-  border-left: thin solid #0f4d92; margin-top: 2em; font-size: 0.9em
+  /*border-left: thin solid #0f4d92; margin-top: 2em; font-size: 0.9em*/
+  border-left: none; margin-top: 2em; font-size: 0.9em
 }
 #moves p { margin: 0.25em 0 }
 #moves h1 { }
