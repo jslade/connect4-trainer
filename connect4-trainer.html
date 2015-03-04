@@ -49,10 +49,12 @@
 
       $(function() {
         var form = $("#connect4-play");
-        form.find("button").click(function() {
+        form.find("#undo").click(function() {
           game.undoMove();
-      });
-
+        });
+        form.find("#recap").click(function() {
+          game.recap();
+        });
     });
     
   </script>
@@ -100,7 +102,10 @@
       <h1>Prediction</h1>
       <span>Game not started</span>
     </div>
-    <div id="connect4-play"><button type="button">Undo</button></div>
+    <div id="connect4-play">
+      <button id="undo" type="button">Undo</button>
+      <button id="recap" type="button">Recap</button>
+    </div>
 
 </div>
 	

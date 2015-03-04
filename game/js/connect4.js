@@ -102,7 +102,7 @@ ConnectFour.prototype.createPiece = function(team) {
   return piece;
 };
 
-ConnectFour.prototype.undoMove = function() {  
+ConnectFour.prototype.undoMove = function(replayMoves) {  
 
   if (this.undoLocked) {
     // the lock protects game state from corruption if the user
@@ -138,11 +138,83 @@ ConnectFour.prototype.undoMove = function() {
     this.moveValuesStack.pop();
     this.nextMoves = this.moveValuesStack[this.moveValuesStack.length - 1];
     this.showMoveValues(this.nextMoves);
-    this.moveHistory.pop();
+    var undoneMove = this.moveHistory.pop();
+    if (replayMoves) {
+      replayMoves["moves"].push(undoneMove);
+      replayMoves["values"].push(this.nextMoves);
+    }
     this.prediction.updatePrediction();
     this.moveNumber--;
     this.updateMoveCounter();
   }  
+};
+
+ConnectFour.prototype.recap = function() { 
+  console.log("Recapping game...");
+  var replayMoves = {};
+  replayMoves["moves"] = [];
+  replayMoves["values"] = [];
+
+  var counter = 0;
+  for (var i = 0; i < this.moveValuesStack.length + 1; i++) {
+    console.log("Undoing move " + i);
+    this.undoMove(replayMoves);
+  };
+  // var movesToRecap = this.moveValuesStack.length - 1; 
+  // if (movesToRecap < 1) {
+  //   return;
+  // }
+
+  // function recapMove(game) { 
+  //   counter++;
+  //   if(counter === movesToRecap) {
+  //     console.log("Clearing interval...");
+  //     console.log(interval);
+  //     clearInterval(interval);
+  //   } 
+  //   console.log("Undoing move...");
+  //   console.log("Counter: " + counter);
+  //   console.log("this = ");
+  //   console.log(this);
+  //   this.game.undoMove(replayMoves);  
+  // }
+
+  // var interval = setInterval(recapMove, 1000);
+  var pieceCounter = 0;
+  
+  this.removeMoveListener();
+  this.removePieceTrackers();
+  this.currentPiece = this.pieces[pieceCounter];
+  this.attachMoveListener();
+  this.attachPieceTracker(this.currentPiece); 
+
+  function replayMove() {
+    if (replayMoves["moves"].length < 1) {
+      console.log("Clearing interval...");
+      console.log(interval);
+      clearInterval(interval); 
+    } else {
+      moveToReplay = replayMoves["moves"].pop();
+      console.log("Replaying move");
+      console.log(moveToReplay);
+      this.game.handleExecutingMove(moveToReplay);
+      movesValuesToDisplay = replayMoves["values"].pop();
+      console.log("Updating move values");
+      console.log(movesValuesToDisplay);
+      this.game.showMoveValues (movesValuesToDisplay);
+      this.game.prediction.updatePrediction();
+      this.game.currentPiece = this.game.createPiece();;
+      console.log("Current piece:");
+      console.log(this.game.currentPiece);
+      this.game.removeMoveListener();
+      this.game.removePieceTrackers();
+      this.game.switchTeams();
+      this.game.attachMoveListener();
+      this.game.attachPieceTracker(this.currentPiece);
+    }
+  }
+
+  var interval = setInterval(replayMove, 1000);
 };
 
 /**

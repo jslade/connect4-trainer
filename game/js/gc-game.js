@@ -265,6 +265,9 @@ GCWeb.Game.prototype.start = function() {
         this.moveHistory.push(moveValue);
         chooseMoveValueDisplay.call(this, moveValue);        
         this.getNextMoveValues(moveValue.board);
+        if (this.nextMoves) {
+          this.moveValuesStack.push(this.nextMoves);
+        }
       } else {
         var message = data.message ? '\n[' + data.message + ']' : '';
         GCWeb.alert('The GamesCrafters server could not handle the request.' +
