@@ -25,10 +25,11 @@
       $("#prediction").slideDown(250);
 
       var config = {
-          width: 7,
-          height: 6,
-          options: { pieces: 4}
-        };
+        width: 7,
+        height: 6,
+        options: { pieces: 4},
+        // local: true
+      };
       game = new ConnectFour(config);
       $("#game").empty().append(game.board);
       game.start();
@@ -39,22 +40,25 @@
         // fetched breaks everything and must be avoided
         game.undoLocked = true;
       }).bind("ajaxStop", function() {
-          game.undoLocked = false;
-          $(this).hide()
+        game.undoLocked = false;
+        $(this).hide()
       }).bind("ajaxError", function() {
-          game.undoLocked = false;
-          $(this).hide();
+        game.undoLocked = false;
+        $(this).hide();
       });
-      });
+    });
 
-      $(function() {
-        var form = $("#connect4-play");
-        form.find("#undo").click(function() {
-          game.undoMove();
-        });
-        form.find("#recap").click(function() {
-          game.recap();
-        });
+    $(function() {
+      var form = $("#connect4-play");
+      form.find("#undo").click(function() {
+        game.undoMove();
+      });
+      form.find("#recap").click(function() {
+        game.recap();
+      });
+      form.find("#reload").click(function() {
+        location.reload();
+      });
     });
     
   </script>
@@ -65,17 +69,10 @@
     <img id="img-spinner" src="images/loading.gif" alt="Fetching move values..."/>
   </div>
 
-  <div id="container"> 
-    <!-- game commands --> 
-    <div class="nav">
-    <ul>
-      <li><a href="javascript:location.reload();">Reset Game</a></li>
-    </ul>
-        
-    </div> 
+  <div id="container">  
+
     <div id="main">
       <div id="game">
-
       </div>
     </div> 
     <!-- sidebar --> 
@@ -102,9 +99,12 @@
       <h1>Prediction</h1>
       <span>Game not started</span>
     </div>
+
+    <!-- game commands -->
     <div id="connect4-play">
       <button id="undo" type="button">Undo</button>
       <button id="recap" type="button">Recap</button>
+      <button id="reload" type="button">Restart</button>
     </div>
 
 </div>

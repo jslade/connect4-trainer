@@ -1,5 +1,6 @@
 .connect4-grid {
-  border: 14px inset #5578c7; border-top-style: none; margin: 1em auto 0;
+  /*border: 14px inset #5578c7; border-top-style: none; margin: 1em auto 0;*/
+  border: none; border-top-style: none; margin: none none none;
   border-collapse: collapse; border-spacing: 0; background-color: #7F7F7F
 }
 .connect4-grid td { margin: 0; padding: 0; line-height: 0 }
