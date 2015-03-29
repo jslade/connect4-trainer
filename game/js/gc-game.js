@@ -17,9 +17,6 @@ GCWeb.alert = function(message) {
 
 /** Displays a confirmation prompt to the user. */
 GCWeb.confirm = function(prompt, onaccept, oncancel) {
-  console.log("Showing confirm with message " + prompt);
-  console.log("OnAccept function: " + onaccept);
-
   if (typeof(onaccept) != "function") {
     onaccept = function() { };
   }
@@ -262,26 +259,11 @@ GCWeb.Game.prototype.start = function() {
           this.moveValuesStack.push(this.nextMoves);
         }
       } else {
-        handled = this.handleMoveValueError(this.startLocalGame);
-        console.log("Handled: " + handled);
-        if (this.local) {
-          this.startLocalGame();
-        }
-        // this._clearDoMoveRequests();
+        this.handleMoveValueError(this.startLocalGame, this);
       }
     }.bind(this);
     options.error = function(xhr, textStatus, errorThrown) {
-      console.log("Error fetching move values:");
-      console.log(errorThrown);
-      console.log(textStatus);
-      console.log(xhr); 
       this.handleMoveValueError(this.startLocalGame, this);
-      // console.log("Handled: " + handled);
-      // console.log("Value of local flag after confirmation alert: ");
-      // console.log(this.local);
-      // if (this.local) {
-      //   this.startLocalGame();
-      // }
     }.bind(this);
     console.log("Fetching initial move values for game start");
     $.ajax(options);
@@ -291,42 +273,18 @@ GCWeb.Game.prototype.start = function() {
 };
 
 GCWeb.Game.prototype.handleMoveValueError = function(useLocalMovesFunction, game) {
-  console.log("Move value retrieval failed!");
-  console.log("Game obj passed to handleMoveValueError():");
-  console.log(game);
   var message = 
     'The GamesCrafters server is unavailable. Continue without move values?';
     
   function useLocalMoveValues() {
-    console.log("Switching to local mode...");
-    console.log(game.local);
     game.local = true;
-    console.log("Game obj in nested function passed to confirm dialog:");
-    console.log(game);
     useLocalMovesFunction.call(game);
-    console.log(game.local);
   }
-  console.log("Accept function passed to handle mover error handler:");
-  console.log(useLocalMovesFunction);
   GCWeb.confirm(message, useLocalMoveValues);
-  // this._clearDoMoveRequests();
-  // return true;
+  this._clearDoMoveRequests();
 }
 
-// A helper function to decide if move-values are available.
-GCWeb.Game.prototype.chooseMoveValueDisplay = function(moveValue) {
-    // Check if the value (win/lose/tie) information is available.
-    var checkbox = $('#option-move-values');
-    if ((typeof moveValue.value) != 'undefined') {
-      checkbox.removeAttr('disabled');
-    } else {
-      checkbox.attr('disabled', 'disabled');
-    }
-  }
-
 GCWeb.Game.prototype.startLocalGame = function() {
-  console.log("Starting game in local mode...");
-  console.log(this);
   var initialState = this.localGetMoveValue(this.defaultBoardString);
   this.moveHistory.push(initialState);
   this.chooseMoveValueDisplay.call(this, initialState);
@@ -337,7 +295,17 @@ GCWeb.Game.prototype.startLocalGame = function() {
     this.fireEvent('nextvaluesreceived', this.nextMoves);
     this._dequeueDoMoveRequest(); // Also sets handlingDoMove to false
   }
-  console.log("Started game in local mode");
+}
+
+// A helper function to decide if move-values are available.
+GCWeb.Game.prototype.chooseMoveValueDisplay = function(moveValue) {
+  // Check if the value (win/lose/tie) information is available.
+  var checkbox = $('#option-move-values');
+  if ((typeof moveValue.value) != 'undefined') {
+    checkbox.removeAttr('disabled');
+  } else {
+    checkbox.attr('disabled', 'disabled');
+  }
 }
 
 GCWeb.Game.prototype.createParameterString = function(board) {
