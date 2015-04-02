@@ -198,7 +198,7 @@ GCWeb.Game = function(name, width, height, config) {
     this.prediction = new GCWeb.Prediction(this);
   }
 /** The URL of the server that is the gateway to the Gamesman provider. */
-GCWeb.Game.serviceUrl = "http://nyc.cs.berkeley.edu:8080/gcweb/service/gamesman/puzzles/";
+GCWeb.Game.serviceUrl = "http://cloud.cs.berkeley.edu:8090/gcweb/service/gamesman/puzzles/";
 
 /** Generates a unique ID for a game instance. */
 GCWeb.Game.generateId = function() {
@@ -253,7 +253,7 @@ GCWeb.Game.prototype.start = function() {
       if (data && data.status == 'ok') {
         var moveValue = data.response;
         this.moveHistory.push(moveValue);
-        chooseMoveValueDisplay.call(this, moveValue);        
+        this.chooseMoveValueDisplay(moveValue);        
         this.getNextMoveValues(moveValue.board);
         if (this.nextMoves) {
           this.moveValuesStack.push(this.nextMoves);
